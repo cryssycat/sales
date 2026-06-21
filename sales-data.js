@@ -1,3 +1,10 @@
+// Sitewide sale settings
+const SALE_SETTINGS = {
+  active: true,
+  percentOff: 20,
+  label: "20% OFF SALE"
+};
+
 const SALES_DATA = {
   adopts: [
     {
