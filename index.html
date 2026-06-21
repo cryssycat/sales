@@ -67,6 +67,8 @@ function getImage(path){
   if(path.startsWith("http://") || path.startsWith("https://")) return path;
   return path.replace(/^\/+/, "");
 }
+
+
 const SALE_SETTINGS = {
   active: true,
   percentOff: 20,
@@ -75,7 +77,6 @@ const SALE_SETTINGS = {
 
 function getPriceNumber(price){
   if(!price) return null;
-
   const match = String(price).match(/(\d+(?:\.\d+)?)/);
   return match ? Number(match[1]) : null;
 }
@@ -83,11 +84,7 @@ function getPriceNumber(price){
 function getSalePrice(price){
   const original = getPriceNumber(price);
 
-  if(
-    !SALE_SETTINGS.active ||
-    !SALE_SETTINGS.percentOff ||
-    original === null
-  ){
+  if(!SALE_SETTINGS.active || !SALE_SETTINGS.percentOff || original === null){
     return {
       originalText: price,
       saleText: price,
@@ -103,7 +100,7 @@ function getSalePrice(price){
     hasSale: true
   };
 }
-  
+
 function renderSalesGrid(gridId, items){
   const grid = document.getElementById(gridId);
   if(!grid) return;
@@ -131,18 +128,8 @@ function renderSalesGrid(gridId, items){
       </div>
       <div class="sale-info">
         <h3>${name}</h3>
-       <p class="price">
-  ${
-    priceData.hasSale
-      ? `
-        <span class="old-price">${priceData.originalText}</span><br>
-        <span class="sale-price">${priceData.saleText}</span><br>
-        <span class="sale-badge">${SALE_SETTINGS.label}</span>
-      `
-      : `
-        <span>${priceData.saleText}</span>
-      `
-  }
+        <p class="price">
+${priceData.hasSale ? `<span class="old-price">${priceData.originalText}</span><br><span class="sale-price">${priceData.saleText}</span><br><span class="sale-badge">${SALE_SETTINGS.label}</span>` : `<span>${priceData.saleText}</span>`}
 </p>
         <p class="note">${note}</p>
       </div>
