@@ -72,22 +72,10 @@ const SALES_DATA = {
   ],
 
   mystery: [
-    {
-      name: "Example Mystery Design",
-      price: "$15",
-      status: "Available",
-      image: "images/mystery/example-mystery.png",
-      note: "A mystery design slot. Replace this image and note when ready."
-    }
+   
   ],
 
   pyp: [
-    {
-      name: "Example PYP",
-      price: "$20+",
-      status: "Open",
-      image: "images/pyp/example-pyp.png",
-      note: "Pick-your-prompt or pick-your-palette listing. Sales handled off-site."
-    }
+   
   ]
 };
