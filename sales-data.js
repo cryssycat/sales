@@ -1,3 +1,9 @@
+const SALE_SETTINGS = {
+  active: true,
+  percentOff: 20,
+  label: "20% OFF SALE"
+};
+
 const SALES_DATA = {
   adopts: [
     {
@@ -41,7 +47,7 @@ const SALES_DATA = {
       name: "Berri",
       price: "$20",
       status: "Available",
-      image: "images/adopts/2.png",
+      image: "images/adopts/Berri.png",
       note: "+$20 for an added Nude View; +$60 for a full reference."
     },
       {
