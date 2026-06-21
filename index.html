@@ -67,7 +67,43 @@ function getImage(path){
   if(path.startsWith("http://") || path.startsWith("https://")) return path;
   return path.replace(/^\/+/, "");
 }
+const SALE_SETTINGS = {
+  active: true,
+  percentOff: 20,
+  label: "20% OFF SALE"
+};
 
+function getPriceNumber(price){
+  if(!price) return null;
+
+  const match = String(price).match(/(\d+(?:\.\d+)?)/);
+  return match ? Number(match[1]) : null;
+}
+
+function getSalePrice(price){
+  const original = getPriceNumber(price);
+
+  if(
+    !SALE_SETTINGS.active ||
+    !SALE_SETTINGS.percentOff ||
+    original === null
+  ){
+    return {
+      originalText: price,
+      saleText: price,
+      hasSale: false
+    };
+  }
+
+  const discounted = original * (1 - SALE_SETTINGS.percentOff / 100);
+
+  return {
+    originalText: `$${original.toFixed(2)}`,
+    saleText: `$${discounted.toFixed(2)}`,
+    hasSale: true
+  };
+}
+  
 function renderSalesGrid(gridId, items){
   const grid = document.getElementById(gridId);
   if(!grid) return;
@@ -85,7 +121,7 @@ function renderSalesGrid(gridId, items){
     const imageUrl = getImage(item.image);
     const status = item.status || "Available";
     const name = item.name || "Unnamed Item";
-    const price = item.price || "Ask";
+    const priceData = getSalePrice(item.price || "Ask");
     const note = item.note || "Message off-site to claim or ask about availability.";
 
     card.innerHTML = `
@@ -95,7 +131,19 @@ function renderSalesGrid(gridId, items){
       </div>
       <div class="sale-info">
         <h3>${name}</h3>
-        <p class="price">${price}</p>
+       <p class="price">
+  ${
+    priceData.hasSale
+      ? `
+        <span class="old-price">${priceData.originalText}</span><br>
+        <span class="sale-price">${priceData.saleText}</span><br>
+        <span class="sale-badge">${SALE_SETTINGS.label}</span>
+      `
+      : `
+        <span>${priceData.saleText}</span>
+      `
+  }
+</p>
         <p class="note">${note}</p>
       </div>
     `;
