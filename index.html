@@ -68,13 +68,6 @@ function getImage(path){
   return path.replace(/^\/+/, "");
 }
 
-
-const SALE_SETTINGS = {
-  active: true,
-  percentOff: 20,
-  label: "20% OFF SALE"
-};
-
 function getPriceNumber(price){
   if(!price) return null;
   const match = String(price).match(/(\d+(?:\.\d+)?)/);
