@@ -231,3 +231,57 @@ h1{
   .contact-box{align-items:flex-start;text-align:left;}
   .tab-button{width:100%;}
 }
+
+
+
+/* ==========================================
+   SALES CARD SIZE FIX — HARD OVERRIDE
+   Put at the VERY BOTTOM of style.css
+========================================== */
+
+.sales-grid{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fill, 300px) !important;
+  justify-content:center !important;
+  align-items:start !important;
+  gap:30px !important;
+}
+
+.sale-card{
+  width:300px !important;
+  max-width:300px !important;
+  min-width:0 !important;
+  margin:0 auto !important;
+}
+
+.sale-image-wrap{
+  width:300px !important;
+  height:300px !important;
+  max-width:300px !important;
+  max-height:300px !important;
+  aspect-ratio:auto !important;
+  overflow:hidden !important;
+}
+
+.sale-image-wrap img{
+  width:300px !important;
+  height:300px !important;
+  max-width:300px !important;
+  max-height:300px !important;
+  object-fit:cover !important;
+  display:block !important;
+}
+
+/* Mobile: let cards fit smaller screens */
+@media(max-width:360px){
+  .sales-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .sale-card,
+  .sale-image-wrap,
+  .sale-image-wrap img{
+    width:100% !important;
+    max-width:300px !important;
+  }
+}
