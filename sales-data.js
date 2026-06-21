@@ -53,10 +53,10 @@ const SALES_DATA = {
     },
       {
       name: "Bird  Twins",
-      price: "$20 Each",
+      price: "$40",
       status: "Available",
       image: "images/adopts/BirdTwins.png",
-      note: "+$20 for an added Nude View; +$60 for a full reference."
+      note: "or $20 Each; $20 each for an added Nude View; +$60 each for a full reference."
     },
 
       {
