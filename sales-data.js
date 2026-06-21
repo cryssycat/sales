@@ -1,10 +1,26 @@
 const SALES_DATA = {
   adopts: [
     {
-      name: "Example Adopt",
-      price: "$25",
+      name: "Cosette",
+      price: "$15",
       status: "Available",
-      image: "images/adopts/example-adopt.png",
+      image: "images/adopts/1.png",
+      note: "Message off-site to claim. Replace this with your real adopt note."
+    },
+
+      {
+      name: "Lizette",
+      price: "$15",
+      status: "Available",
+      image: "images/adopts/2.png",
+      note: "Message off-site to claim. Replace this with your real adopt note."
+    },
+
+  {
+      name: "Lulu",
+      price: "$15",
+      status: "Available",
+      image: "images/adopts/3.png",
       note: "Message off-site to claim. Replace this with your real adopt note."
     }
   ],
