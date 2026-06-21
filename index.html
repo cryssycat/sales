@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Hub</title>
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-card">
+    <p class="eyebrow">Starbrew Sales Gallery</p>
+    <h1>Sales Hub</h1>
+    <p class="subtitle">A browse-only gallery for adopts, mystery designs, and PYPs currently available.</p>
+    <div class="contact-box">
+      <strong>How to purchase:</strong>
+      <span>Message us off-site to claim or ask questions. This page does not process payments, holds, carts, or checkout.</span>
+    </div>
+  </div>
+</header>
+
+<main class="sales-page">
+  <nav class="tabs" aria-label="Sales categories">
+    <button class="tab-button active" data-tab="adopts">Adopts</button>
+    <button class="tab-button" data-tab="mystery">Mystery Designs</button>
+    <button class="tab-button" data-tab="pyp">PYPs</button>
+  </nav>
+
+  <section id="adopts" class="tab-panel active">
+    <div class="section-title">
+      <h2>Adopts</h2>
+      <p>Finished designs available for off-site purchase.</p>
+    </div>
+    <div id="adoptsGrid" class="sales-grid"></div>
+  </section>
+
+  <section id="mystery" class="tab-panel">
+    <div class="section-title">
+      <h2>Mystery Designs</h2>
+      <p>Surprise or semi-surprise designs available through off-site claiming.</p>
+    </div>
+    <div id="mysteryGrid" class="sales-grid"></div>
+  </section>
+
+  <section id="pyp" class="tab-panel">
+    <div class="section-title">
+      <h2>PYPs</h2>
+      <p>Pick-your-palette, pick-your-prompt, or other customizable sale options.</p>
+    </div>
+    <div id="pypGrid" class="sales-grid"></div>
+  </section>
+</main>
+
+<div id="lightbox" class="lightbox" aria-hidden="true">
+  <button id="lightboxClose" class="lightbox-close" aria-label="Close image">×</button>
+  <img id="lightboxImage" src="" alt="Full-size sale preview">
+</div>
+
+<script src="sales-data.js?v=1"></script>
+<script>
+const PLACEHOLDER = "images/placeholder.png";
+
+function getImage(path){
+  if(!path) return PLACEHOLDER;
+  path = String(path).trim();
+  if(!path) return PLACEHOLDER;
+  if(path.startsWith("http://") || path.startsWith("https://")) return path;
+  return path.replace(/^\/+/, "");
+}
+
+function renderSalesGrid(gridId, items){
+  const grid = document.getElementById(gridId);
+  if(!grid) return;
+  grid.innerHTML = "";
+
+  if(!Array.isArray(items) || items.length === 0){
+    grid.innerHTML = '<p class="empty-state">Nothing listed here yet.</p>';
+    return;
+  }
+
+  items.forEach(item => {
+    const card = document.createElement("article");
+    card.className = "sale-card";
+
+    const imageUrl = getImage(item.image);
+    const status = item.status || "Available";
+    const name = item.name || "Unnamed Item";
+    const price = item.price || "Ask";
+    const note = item.note || "Message off-site to claim or ask about availability.";
+
+    card.innerHTML = `
+      <div class="sale-image-wrap">
+        <img src="${imageUrl}" alt="${name}" onerror="this.src='${PLACEHOLDER}'">
+        <span class="status-pill">${status}</span>
+      </div>
+      <div class="sale-info">
+        <h3>${name}</h3>
+        <p class="price">${price}</p>
+        <p class="note">${note}</p>
+      </div>
+    `;
+
+    const img = card.querySelector("img");
+    if(img) img.addEventListener("click", () => openLightbox(imageUrl));
+
+    grid.appendChild(card);
+  });
+}
+
+function setupTabs(){
+  document.querySelectorAll(".tab-button").forEach(button => {
+    button.addEventListener("click", () => {
+      const target = button.dataset.tab;
+      document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.remove("active"));
+      button.classList.add("active");
+      const panel = document.getElementById(target);
+      if(panel) panel.classList.add("active");
+    });
+  });
+}
+
+function openLightbox(src){
+  const box = document.getElementById("lightbox");
+  const img = document.getElementById("lightboxImage");
+  if(!box || !img) return;
+  img.src = src;
+  box.classList.add("active");
+  box.setAttribute("aria-hidden", "false");
+}
+
+function closeLightbox(){
+  const box = document.getElementById("lightbox");
+  const img = document.getElementById("lightboxImage");
+  if(!box || !img) return;
+  box.classList.remove("active");
+  box.setAttribute("aria-hidden", "true");
+  img.src = "";
+}
+
+function setupLightbox(){
+  const closeButton = document.getElementById("lightboxClose");
+  const lightbox = document.getElementById("lightbox");
+  if(closeButton) closeButton.addEventListener("click", closeLightbox);
+  if(lightbox) lightbox.addEventListener("click", event => {
+    if(event.target.id === "lightbox") closeLightbox();
+  });
+  document.addEventListener("keydown", event => {
+    if(event.key === "Escape") closeLightbox();
+  });
+}
+
+function init(){
+  setupTabs();
+  setupLightbox();
+  renderSalesGrid("adoptsGrid", SALES_DATA.adopts);
+  renderSalesGrid("mysteryGrid", SALES_DATA.mystery);
+  renderSalesGrid("pypGrid", SALES_DATA.pyp);
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
