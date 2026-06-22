@@ -25,6 +25,14 @@
 </header>
 
 <main class="sales-page">
+  <div class="sales-search-wrap">
+  <input
+    id="salesSearch"
+    class="sales-search"
+    type="search"
+    placeholder="Search by name, designer, tag, status, or price..."
+  >
+</div>
   <nav class="tabs" aria-label="Sales categories">
     <button class="tab-button active" data-tab="adopts">Adopts</button>
     <button class="tab-button" data-tab="mystery">Mystery Designs</button>
@@ -121,7 +129,9 @@ function renderSalesGrid(gridId, items){
     const imageUrl = getImage(item.image);
     const status = item.status || "Available";
     const designer = item.designer || "";
+    const tags = Array.isArray(item.tags) ? item.tags : [];
     const name = item.name || "Unnamed Item";
+    
 const priceData = getSalePrice(item.price || "Ask!");
 const note = (item.note || "").trim();
 
@@ -152,6 +162,16 @@ priceData.hasSale
 ${
 note
 ? `<p class="note">${note}</p>`
+: ""
+}
+
+${
+tags.length
+? `
+<div class="sale-tags">
+  ${tags.map(tag => `<span>${tag}</span>`).join("")}
+</div>
+`
 : ""
 }
       </div>
@@ -222,7 +242,7 @@ function normalizeCategory(value){
 async function loadSales(){
   setupTabs();
   setupLightbox();
-
+  setupSearch();
   try{
     const response = await fetch(`${API_BASE}/sales`);
     const items = await response.json();
@@ -235,9 +255,8 @@ async function loadSales(){
     SALES_DATA.mystery = items.filter(item => normalizeCategory(item.category) === "mystery" || normalizeCategory(item.category) === "mystery design" || normalizeCategory(item.category) === "mystery designs");
     SALES_DATA.pyp = items.filter(item => normalizeCategory(item.category) === "pyp" || normalizeCategory(item.category) === "pyps");
 
-    renderSalesGrid("adoptsGrid", SALES_DATA.adopts);
-    renderSalesGrid("mysteryGrid", SALES_DATA.mystery);
-    renderSalesGrid("pypGrid", SALES_DATA.pyp);
+    renderFilteredSales();
+    
   }
   catch(err){
     console.error("SalesHub load error:", err);
@@ -251,6 +270,51 @@ async function loadSales(){
 }
 
 document.addEventListener("DOMContentLoaded", loadSales);
+
+  function itemMatchesSearch(item, query){
+  if(!query) return true;
+
+  const tags = Array.isArray(item.tags) ? item.tags.join(" ") : "";
+
+  const haystack = [
+    item.name,
+    item.category,
+    item.status,
+    item.price,
+    item.note,
+    item.designer,
+    tags
+  ].join(" ").toLowerCase();
+
+  return haystack.includes(query.toLowerCase());
+}
+
+function renderFilteredSales(){
+  const searchInput = document.getElementById("salesSearch");
+  const query = searchInput ? searchInput.value.trim() : "";
+
+  renderSalesGrid(
+    "adoptsGrid",
+    SALES_DATA.adopts.filter(item => itemMatchesSearch(item, query))
+  );
+
+  renderSalesGrid(
+    "mysteryGrid",
+    SALES_DATA.mystery.filter(item => itemMatchesSearch(item, query))
+  );
+
+  renderSalesGrid(
+    "pypGrid",
+    SALES_DATA.pyp.filter(item => itemMatchesSearch(item, query))
+  );
+}
+
+function setupSearch(){
+  const searchInput = document.getElementById("salesSearch");
+  if(!searchInput) return;
+
+  searchInput.addEventListener("input", renderFilteredSales);
+}
 </script>
 </body>
 </html>
