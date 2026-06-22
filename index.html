@@ -62,33 +62,13 @@
 </div>
 
 <script>
-const API_BASE = "https://charahub.crysthigpen.workers.dev";
-
-let SALES_DATA = {
-  adopts: [],
-  mystery: [],
-  pyp: []
-};
-
-async function loadSales(){
-  try{
-    const response = await fetch(`${API_BASE}/sales`);
-    const items = await response.json();
-
-    SALES_DATA.adopts = items.filter(i => i.category === "Adopt");
-    SALES_DATA.mystery = items.filter(i => i.category === "Mystery");
-    SALES_DATA.pyp = items.filter(i => i.category === "PYP");
-
-    init();
-  }
-  catch(err){
-    console.error(err);
-  }
-}
-
-document.addEventListener("DOMContentLoaded", loadSales);
-
 const PLACEHOLDER = "images/placeholder.png";
+
+const SALE_SETTINGS = {
+  active: false,
+  percentOff: 20,
+  label: "20% OFF SALE"
+};
 
 function getImage(path){
   if(!path) return PLACEHOLDER;
@@ -208,14 +188,50 @@ function setupLightbox(){
   });
 }
 
-function init(){
-  setupTabs();
-  setupLightbox();
-  renderSalesGrid("adoptsGrid", SALES_DATA.adopts);
-  renderSalesGrid("mysteryGrid", SALES_DATA.mystery);
-  renderSalesGrid("pypGrid", SALES_DATA.pyp);
+const API_BASE = "https://charahub.crysthigpen.workers.dev";
+
+let SALES_DATA = {
+  adopts: [],
+  mystery: [],
+  pyp: []
+};
+
+function normalizeCategory(value){
+  return String(value || "").trim().toLowerCase();
 }
 
+async function loadSales(){
+  setupTabs();
+  setupLightbox();
+
+  try{
+    const response = await fetch(`${API_BASE}/sales`);
+    const items = await response.json();
+
+    if(!Array.isArray(items)){
+      throw new Error("Sales endpoint did not return an array.");
+    }
+
+    SALES_DATA.adopts = items.filter(item => normalizeCategory(item.category) === "adopt" || normalizeCategory(item.category) === "adopts");
+    SALES_DATA.mystery = items.filter(item => normalizeCategory(item.category) === "mystery" || normalizeCategory(item.category) === "mystery design" || normalizeCategory(item.category) === "mystery designs");
+    SALES_DATA.pyp = items.filter(item => normalizeCategory(item.category) === "pyp" || normalizeCategory(item.category) === "pyps");
+
+    renderSalesGrid("adoptsGrid", SALES_DATA.adopts);
+    renderSalesGrid("mysteryGrid", SALES_DATA.mystery);
+    renderSalesGrid("pypGrid", SALES_DATA.pyp);
+  }
+  catch(err){
+    console.error("SalesHub load error:", err);
+
+    const grids = ["adoptsGrid", "mysteryGrid", "pypGrid"];
+    grids.forEach(id => {
+      const grid = document.getElementById(id);
+      if(grid) grid.innerHTML = '<p class="empty-state">Unable to load sales listings. Check the worker endpoint and SALES_DATABASE_ID.</p>';
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadSales);
 </script>
 </body>
 </html>
