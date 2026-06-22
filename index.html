@@ -61,8 +61,33 @@
   <img id="lightboxImage" src="" alt="Full-size sale preview">
 </div>
 
-<script src="sales-data.js?v=1"></script>
 <script>
+const API_BASE = "https://charahub.crysthigpen.workers.dev";
+
+let SALES_DATA = {
+  adopts: [],
+  mystery: [],
+  pyp: []
+};
+
+async function loadSales(){
+  try{
+    const response = await fetch(`${API_BASE}/sales`);
+    const items = await response.json();
+
+    SALES_DATA.adopts = items.filter(i => i.category === "Adopt");
+    SALES_DATA.mystery = items.filter(i => i.category === "Mystery");
+    SALES_DATA.pyp = items.filter(i => i.category === "PYP");
+
+    init();
+  }
+  catch(err){
+    console.error(err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadSales);
+
 const PLACEHOLDER = "images/placeholder.png";
 
 function getImage(path){
@@ -191,7 +216,6 @@ function init(){
   renderSalesGrid("pypGrid", SALES_DATA.pyp);
 }
 
-document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>
