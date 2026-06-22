@@ -368,3 +368,26 @@ h1{
 
     color:#fff;
 }
+.card-pills{
+  position:absolute;
+  top:12px;
+  right:12px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:flex-end;
+}
+
+.status-pill{
+  position:static;
+}
+
+.designer-pill{
+  padding:7px 12px;
+  border-radius:999px;
+  background:rgba(16,7,25,.82);
+  border:1px solid rgba(255,255,255,.22);
+  color:#fff;
+  font-weight:700;
+  font-size:.84rem;
+}
