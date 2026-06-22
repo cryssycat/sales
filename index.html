@@ -120,6 +120,7 @@ function renderSalesGrid(gridId, items){
 
     const imageUrl = getImage(item.image);
     const status = item.status || "Available";
+    const designer = item.designer || "";
     const name = item.name || "Unnamed Item";
 const priceData = getSalePrice(item.price || "Ask!");
 const note = (item.note || "").trim();
@@ -127,7 +128,10 @@ const note = (item.note || "").trim();
     card.innerHTML = `
       <div class="sale-image-wrap">
         <img src="${imageUrl}" alt="${name}" onerror="this.src='${PLACEHOLDER}'">
-        <span class="status-pill">${status}</span>
+     <div class="card-pills">
+  <span class="status-pill">${status}</span>
+  ${designer ? `<span class="designer-pill">🎨 ${designer}</span>` : ""}
+</div>
       </div>
       <div class="sale-info">
         <h3>${name}</h3>
