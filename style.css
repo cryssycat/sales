@@ -391,3 +391,31 @@ h1{
   font-weight:700;
   font-size:.84rem;
 }
+
+
+.sales-search-wrap{
+  max-width:620px;
+  margin:0 auto 24px;
+}
+
+.sales-search{
+  width:100%;
+  padding:14px 18px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(16,7,25,.75);
+  color:var(--text);
+  font:inherit;
+  font-weight:700;
+  outline:none;
+  box-shadow:var(--shadow);
+}
+
+.sales-search::placeholder{
+  color:var(--muted);
+}
+
+.sales-search:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(230,168,255,.16);
+}
