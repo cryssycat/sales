@@ -121,8 +121,8 @@ function renderSalesGrid(gridId, items){
     const imageUrl = getImage(item.image);
     const status = item.status || "Available";
     const name = item.name || "Unnamed Item";
-    const priceData = getSalePrice(item.price || "Ask");
-    const note = item.note || "Message off-site to claim or ask about availability.";
+const priceData = getSalePrice(item.price || "Ask!");
+const note = (item.note || "").trim();
 
     card.innerHTML = `
       <div class="sale-image-wrap">
@@ -131,10 +131,25 @@ function renderSalesGrid(gridId, items){
       </div>
       <div class="sale-info">
         <h3>${name}</h3>
-        <p class="price">
-${priceData.hasSale ? `<span class="old-price">${priceData.originalText}</span><br><span class="sale-price">${priceData.saleText}</span><br><span class="sale-badge">${SALE_SETTINGS.label}</span>` : `<span>${priceData.saleText}</span>`}
+      <p class="price">
+${
+priceData.hasSale
+? `
+<span class="old-price">${priceData.originalText}</span><br>
+<span class="sale-price">${priceData.saleText}</span><br>
+<span class="sale-badge">${SALE_SETTINGS.label}</span>
+`
+: priceData.saleText
+? `<span>$${priceData.saleText}</span>`
+: ""
+}
 </p>
-        <p class="note">${note}</p>
+
+${
+note
+? `<p class="note">${note}</p>`
+: ""
+}
       </div>
     `;
 
