@@ -419,3 +419,45 @@ h1{
   border-color:var(--accent);
   box-shadow:0 0 0 4px rgba(230,168,255,.16);
 }
+
+
+.sale-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+
+.sale-tags span{
+    display:inline-flex;
+    align-items:center;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.06);
+
+    border:1px solid rgba(224,168,255,.25);
+
+    color:var(--text);
+
+    font-size:.78rem;
+    font-weight:700;
+
+    transition:.2s ease;
+}
+
+.sale-tags span:hover{
+    background:
+      linear-gradient(
+        135deg,
+        var(--accent-2),
+        var(--accent)
+      );
+
+    color:white;
+
+    box-shadow:
+      0 6px 16px rgba(157,97,212,.35);
+}
